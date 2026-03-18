@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@500&display=swap');
+
+.cardd {
+    width: 280px;
+    height: 250px;
+    background-color: #f6f6f6;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: -3px 3px 7px #d6d6d673, 3px 3px 5px rgba(186, 186, 186, 0.288);
+}
+
+.imgg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.imagesss {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: -3px 3px 7px #d6d6d673, 3px 3px 5px rgba(186, 186, 186, 0.288);
+    border: 1px solid #ffffff;
+}
+
+.imagesss img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: auto;
+    width: 100%;
+    transform: translate(-50%, -50%);
+}
+
+.imagesss:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(147, 147, 147, 0.7);
+    z-index: 2;
+}
+
+.imgName {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    color: #FFF;
+    font-size: 14px;
+    width: 90%;
+    text-align: center;
+}
+
+.imagesss:hover .imgName {
+    display: block;
+}
+
+.inputt {
+    display: none;
+}
+
+.labell {
+    position: relative;
+}
+
+.tmbl {
+    background-color: #f6f6f6;
+    box-shadow: -3px -3px 7px #d6d6d673, 3px 3px 7px rgba(186, 186, 186, 0.288);
+    width: 250px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    /* Pointer saat hover */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(99, 99, 99);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tmbl:hover {
+    background-color: #cfd3da;
+    box-shadow: inset -3px -3px 7px #d6d6d673, inset 3px 3px 7px rgba(186, 186, 186, 0.288);
+    color: #4747476b;
+    transform: scale(1.05);
+}
