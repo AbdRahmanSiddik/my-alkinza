@@ -84,7 +84,7 @@
                 </td>
                 <td>
                     <div>{{ $item->kasir?->name }}</div>
-                    <div>{{ $item->tanggal }}</div>
+                    <div>{{ $item->created_at->format('d F Y') }}</div>
                 </td>
                 <td>
                     @if ($item->status === 'diajukan')

@@ -63,9 +63,9 @@
                 <td>{{ $item->nomor_meja }}</td>
               </tr>
             @empty
-              <tr>
+              {{-- <tr>
                 <td colspan="3" class="text-center">Tidak ada data Meja</td>
-              </tr>
+              </tr> --}}
             @endforelse
           </tbody>
         </table>

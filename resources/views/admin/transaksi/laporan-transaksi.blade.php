@@ -34,6 +34,24 @@
                     </span>
                 </div>
             </div>
+            <form method="GET" class="d-flex align-items-center gap-2 ms-auto me-2">
+                <select name="searchKasir" id="searchKasir" class="form-control">
+                    <option value="">Pilih Kasir</option>
+                    @foreach ($kasir as $k)
+                        <option value="{{ $k->id }}" {{ request('searchKasir') == $k->id ? 'selected' : '' }}>
+                            {{ $k->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <input type="date" id="searchDate" name="searchDate" class="form-control form-control"
+                    value="{{ request('searchDate', now()->format('Y-m-d')) }}">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+            <div>
+                <a href="{{ route('laporan.transaksi') }}" class="btn btn-secondary">
+                    <i class="ti ti-refresh-cw"></i> Refresh
+                </a>
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -58,7 +76,17 @@
                                     {{ $item->kode_transaksi }}</td>
                                 <td>{{ $item->kuantitas }}</td>
                                 <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                                <td>{{ ucfirst($item->status) }}</td>
+                                <td>
+                                    @if ($item->status == 'selesai')
+                                        <span class="badge bg-success">Selesai</span>
+                                    @elseif ($item->status == 'keranjang')
+                                        <span class="badge bg-info">Keranjang</span>
+                                    @elseif ($item->status == 'menanti')
+                                        <span class="badge bg-warning">Menanti</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ ucfirst($item->status) }}</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <div>
                                         {{ $item->kasir->name }}
@@ -171,9 +199,9 @@
                                 </div>
                             </div>
                         @empty
-                            <tr>
-                                <td colspan="9" class="text-center">Tidak ada transaksi diselesaikan.</td>
-                            </tr>
+                            {{-- <tr>
+                                <td colspan="7" class="text-center">Tidak ada transaksi diselesaikan.</td>
+                            </tr> --}}
                         @endforelse
                     </tbody>
                 </table>

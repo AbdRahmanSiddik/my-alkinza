@@ -43,9 +43,9 @@
                         <tr>
                             <th>No</th>
                             <th>Hari, Tanggal</th>
-                            @foreach ($kasir as $item)
+                            {{-- @foreach ($kasir as $item)
                                 <th>Kasir {{ $item->name }}</th>
-                            @endforeach
+                            @endforeach --}}
                             <th>Total</th>
                             <th>Tunai</th>
                             <th>Non-Tunai</th>
@@ -63,19 +63,19 @@
                                 </td>
 
                                 {{-- Kolom Kasir --}}
-                                @php $grandTotal = 0; @endphp
-                                @foreach ($kasir as $kasirItem)
+                                {{-- @php $grandTotal = 0; @endphp --}}
+                                {{-- @foreach ($kasir as $kasirItem)
                                     @php
                                         $detailKasir = $data['kasir'][$kasirItem->id] ?? null;
                                         $totalKasir = $detailKasir['total'] ?? 0;
                                         $grandTotal += $totalKasir;
                                     @endphp
                                     <td>Rp {{ number_format($totalKasir, 0, ',', '.') }}</td>
-                                @endforeach
+                                @endforeach --}}
 
                                 {{-- Total --}}
                                 <td>
-                                    <strong>Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong>
+                                    <strong>Rp {{ number_format($data['tunai'] + $data['non_tunai'], 0, ',', '.') }}</strong>
                                 </td>
 
                                 {{-- Tunai --}}
@@ -95,59 +95,17 @@
 
                             </tr>
                         @empty
-                            <tr>
+                            {{-- <tr>
                                 <td colspan="{{ 5 + $kasir->count() }}" class="text-center">
                                     Tidak ada transaksi diselesaikan.
                                 </td>
-                            </tr>
+                            </tr> --}}
                         @endforelse
 
                     </tbody>
                 </table>
 
                 @foreach ($laporan as $tanggal => $data)
-                    {{-- <div class="modal fade" id="detailModal{{ $loop->iteration }}" tabindex="-1">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        Detail Shift
-                                        {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y') }}
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Kasir</th>
-                                                <th>Tunai</th>
-                                                <th>Non Tunai</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($kasir as $kasirItem)
-                                                @php
-                                                    $detail = $data['kasir'][$kasirItem->id] ?? null;
-                                                @endphp
-                                                <tr>
-                                                    <td>{{ $kasirItem->name }}</td>
-                                                    <td>Rp {{ number_format($detail['tunai'] ?? 0, 0, ',', '.') }}</td>
-                                                    <td>Rp {{ number_format($detail['non_tunai'] ?? 0, 0, ',', '.') }}
-                                                    </td>
-                                                    <td>Rp {{ number_format($detail['total'] ?? 0, 0, ',', '.') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div> --}}
 
                     {{-- MODAL --}}
                     <div class="modal fade" id="detailModal{{ $loop->iteration }}" tabindex="-1">
@@ -193,19 +151,21 @@
                                                 $grandTotal += $total;
                                             @endphp
 
-                                            <div class="bold">{{ $kasirItem->name }}</div>
+                                            @if ($total > 0)
+                                                <div class="bold">{{ $kasirItem->name }}</div>
 
-                                            <div>
-                                                Tunai : Rp {{ number_format($tunai, 0, ',', '.') }}
-                                            </div>
-                                            <div>
-                                                Non : Rp {{ number_format($non, 0, ',', '.') }}
-                                            </div>
-                                            <div class="bold">
-                                                Total : Rp {{ number_format($total, 0, ',', '.') }}
-                                            </div>
+                                                <div>
+                                                    Tunai : Rp {{ number_format($tunai, 0, ',', '.') }}
+                                                </div>
+                                                <div>
+                                                    Non : Rp {{ number_format($non, 0, ',', '.') }}
+                                                </div>
+                                                <div class="bold">
+                                                    Total : Rp {{ number_format($total, 0, ',', '.') }}
+                                                </div>
 
-                                            <div class="line"></div>
+                                                <div class="line"></div>
+                                            @endif
                                         @endforeach
 
 
@@ -260,31 +220,31 @@
             let printWindow = window.open('', '', 'width=400,height=600');
 
             printWindow.document.write(`
-        <html>
-        <head>
-            <title>Print Shift</title>
-            <style>
-                @page { size: 52mm auto; margin: 0; }
-                body {
-                    width: 52mm;
-                    margin: 0;
-                    padding: 2mm;
-                    font-family: monospace;
-                    font-size: 10px;
-                }
-                table { width: 100%; border-collapse: collapse; }
-                th, td { padding: 2px 0; font-size: 10px; }
-                .right { text-align: right; }
-                .center { text-align: center; }
-                .bold { font-weight: bold; }
-                .line { border-top: 1px dashed #000; margin: 4px 0; }
-            </style>
-        </head>
-        <body onload="window.print(); window.close();">
-            ${content}
-        </body>
-        </html>
-    `);
+                <html>
+                <head>
+                    <title>Print Shift</title>
+                    <style>
+                        @page { size: 52mm auto; margin: 0; }
+                        body {
+                            width: 52mm;
+                            margin: 0;
+                            padding: 2mm;
+                            font-family: monospace;
+                            font-size: 10px;
+                        }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 2px 0; font-size: 10px; }
+                        .right { text-align: right; }
+                        .center { text-align: center; }
+                        .bold { font-weight: bold; }
+                        .line { border-top: 1px dashed #000; margin: 4px 0; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.close();">
+                    ${content}
+                </body>
+                </html>
+            `);
 
             printWindow.document.close();
         }

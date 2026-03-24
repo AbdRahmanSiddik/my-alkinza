@@ -17,11 +17,14 @@ class KasController extends Controller
     {
         $tokoId = Session::get('toko.id');
 
+        $pemasukan = Kas::where('toko_id', $tokoId)->where('jenis', 'pemasukan')->sum('jumlah');
+        $pengeluaran = Kas::where('toko_id', $tokoId)->where('jenis', 'pengeluaran')->sum('jumlah');
+
         $data = [
-            'kas' => Kas::where('toko_id', $tokoId)->get(),
-            'pemasukan' => Kas::where('toko_id', $tokoId)->where('jenis', 'pemasukan')->sum('jumlah'),
-            'pengeluaran' => Kas::where('toko_id', $tokoId)->where('jenis', 'pengeluaran')->sum('jumlah'),
-            'saldo' => Kas::where('toko_id', $tokoId)->where('jenis', 'pemasukan')->sum('jumlah') - Kas::where('toko_id', $tokoId)->where('jenis', 'pengeluaran')->sum('jumlah'),
+            'kas' => Kas::where('toko_id', $tokoId)->latest()->get(),
+            'pemasukan' => $pemasukan,
+            'pengeluaran' => $pengeluaran,
+            'saldo' => $pemasukan - $pengeluaran,
         ];
 
         return view('admin.kas.kas-index', $data);
@@ -92,17 +95,30 @@ class KasController extends Controller
         return redirect()->route('kas.index')->with('success', 'Data kas berhasil dihapus.');
     }
 
-    public function laporan_transaksi()
+    public function laporan_transaksi(Request $request)
     {
         $tokoId = Session::get('toko.id');
+        $searchDate = $request->input('searchDate') ? date('Y-m-d', strtotime($request->input('searchDate'))) : now()->format('Y-m-d');
+        $searchKasir = $request->input('searchKasir');
+        $kasir = User::whereHas('tokos', function ($q) use ($tokoId) {
+            return $q->where('toko_id', $tokoId);
+        })
+            ->role('kasir')
+            ->get();
 
         $transaksi = Transaksi::with(['produkPivot.produk', 'produkPivot.items'])
             ->where('toko_id', $tokoId)
+            ->when($searchDate, function ($query, $searchDate) {
+                return $query->whereDate('created_at', $searchDate);
+            })
+            ->when($searchKasir, function ($query, $searchKasir) {
+                return $query->where('kasir_id', $searchKasir);
+            })
             ->whereIn('status', ['selesai', 'menanti', 'pending', 'keranjang'])
             ->latest()
             ->get();
 
-        return view('admin.transaksi.laporan-transaksi', compact('transaksi'));
+        return view('admin.transaksi.laporan-transaksi', compact('transaksi', 'kasir'));
     }
 
     public function update_pembatalan(Request $request, $id)

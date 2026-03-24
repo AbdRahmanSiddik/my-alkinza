@@ -21,7 +21,7 @@
                                         <img alt="Categories" data-cfsrc="{{ asset($cat->icon) }}"
                                             style="display:none;visibility:hidden;"><noscript><img
                                                 src="{{ asset($cat->icon) }}" alt="Categories"></noscript>
-                                    </a>
+                                    </a>center
                                     <h6><a href="javascript:void(0);">{{ $cat->name }}</a></h6>
                                 </li>
                             @endforeach
@@ -376,8 +376,6 @@
                             <i class="fas fa-print me-1"></i> Print Lengkap
                         </a>
 
-
-
                     </div>
                 </div>
 
@@ -570,9 +568,4 @@
             }, 300);
         });
     </script>
-
-
-
-
-
 </div>
